@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import au.com.sann.wedeliver.model.Delivery;
 import au.com.sann.wedeliver.repository.DelivererRepository;
 import au.com.sann.wedeliver.repository.DeliveryRepository;
@@ -29,9 +34,14 @@ public class DeliveryController {
 	}
 	
 	@PostMapping("/newDelivery")
-	public ResponseEntity<Delivery> newDelivery(@RequestBody Delivery delivery){
+	public ResponseEntity<Delivery> newDelivery(@RequestBody String deliveryJson) throws JsonMappingException, JsonProcessingException{
 		
-		delivery.setDeliverer(delivererRepository.save(delivery.getDeliverer()));
-		return new ResponseEntity<>(deliveryRepository.save(delivery), HttpStatus.CREATED);
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule());
+		Delivery deliveryObject = objectMapper.readValue(deliveryJson, Delivery.class);
+		
+		deliveryObject.setDeliverer(delivererRepository.save(deliveryObject.getDeliverer()));
+		return new ResponseEntity<>(deliveryRepository.save(deliveryObject), HttpStatus.CREATED);
 	}
+
 }
