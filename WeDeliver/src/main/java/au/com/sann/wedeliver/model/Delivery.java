@@ -30,7 +30,7 @@ public class Delivery {
 	
 	@NotNull
 	@ManyToOne
-	private Deliverer deliverer;
+	private Rider rider;
 	
 	@NotNull
 	private String customer;
@@ -73,12 +73,12 @@ public class Delivery {
 		this.address = address;
 	}
 
-	public Deliverer getDeliverer() {
-		return deliverer;
+	public Rider getRider() {
+		return rider;
 	}
 
-	public void setDeliverer(Deliverer deliverer) {
-		this.deliverer = deliverer;
+	public void setRider(Rider deliverer) {
+		this.rider = deliverer;
 	}
 
 	public String getCustomer() {
